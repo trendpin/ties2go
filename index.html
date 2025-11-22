@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ties2go</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --gold: #D4AF37;
+      --teal: #0D9488;
+      --magenta: #C41E68;
+      --cobalt: #1E40AF;
+      --charcoal: #1F2937;
+      --light: #F9FAFB;
+      --white: #FFFFFF;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--white);
+      color: var(--charcoal);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4, h5 { font-family: 'Playfair Display', serif; line-height: 1.2; }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      padding: 1.2rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      transition: all 0.3s;
+    }
+    .logo {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--cobalt);
+      letter-spacing: -1px;
+    }
+    .logo span { color: var(--magenta); }
+    .nav-links a {
+      margin-left: 2.5rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+
+    /* Hero */
+    .hero {
+      height: 100vh;
+      min-height: 720px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('https://picsum.photos/seed/ties2go/1920/1080.webp') center/cover no-repeat;
+      opacity: 0.25;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 1000px; padding: 2rem; }
+    .hero h1 {
+      font-size: 5.8rem;
+      margin-bottom: 0.2rem;
+      letter-spacing: -2px;
+      text-transform: lowercase;
+    }
+    .hero .subtitle {
+      font-size: 2.4rem;
+      font-weight: 400;
+      margin-bottom: 1.5rem;
+      opacity: 0.95;
+    }
+    .hero p {
+      font-size: 1.3rem;
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      opacity: 0.9;
+    }
+    .btn {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      margin: 0.5rem;
+    }
+    .btn-primary {
+      background: var(--gold);
+      color: #000;
+    }
+    .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(212,175,55,0.4); }
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+    .btn-secondary:hover { background: white; color: var(--cobalt); }
+
+    section { padding: 100px 5%; }
+    .section-title {
+      text-align: center;
+      font-size: 3rem;
+      margin-bottom: 4rem;
+      position: relative;
+    }
+    .section-title::after {
+      content: '';
+      width: 80px;
+      height: 4px;
+      background: var(--gold);
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Collections */
+    .collections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .collection-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: transform 0.4s;
+    }
+    .collection-card:hover { transform: translateY(-15px); }
+    .collection-card img {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      transition: transform 0.6s;
+    }
+    .collection-card:hover img { transform: scale(1.08); }
+    .collection-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      display: flex;
+      align-items: flex-end;
+      padding: 2rem;
+      color: white;
+    }
+    .collection-overlay h3 { font-size: 2rem; }
+
+    /* Carousel */
+    .carousel { background: var(--light); overflow: hidden; }
+    .carousel-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .carousel-inner {
+      display: flex;
+      gap: 2rem;
+      padding: 2rem 0;
+      transition: transform 0.5s ease;
+      width: max-content;
+    }
+    .product-card {
+      min-width: 320px;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+    .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+    .product-card img { height: 360px; object-fit: cover; }
+    .product-info { padding: 1.5rem; text-align: center; }
+    .product-info h4 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .tagline { font-size: 0.95rem; color: #666; margin-bottom: 1rem; }
+    .price { font-size: 1.5rem; color: var(--teal); font-weight: 600; margin-bottom: 1rem; }
+    .add-to-cart {
+      background: var(--cobalt);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .add-to-cart:hover { background: var(--magenta); transform: scale(1.05); }
+
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .feature i { font-size: 3rem; color: var(--gold); margin-bottom: 1.5rem; }
+    .feature h3 { font-size: 1.6rem; margin-bottom: 1rem; }
+
+    /* About & Testimonials */
+    .about { background: var(--charcoal); color: white; text-align: center; }
+    .about .section-title { color: white; }
+    .about .section-title::after { background: var(--gold); }
+    .about p { max-width: 800px; margin: 0 auto 1.5rem; font-size: 1.2rem; opacity: 0.9; }
+    .testimonials {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .testimonial {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      font-style: italic;
+    }
+    .testimonial cite { font-style: normal; color: var(--gold); font-weight: 600; }
+
+    /* Newsletter */
+    .newsletter {
+      background: linear-gradient(135deg, var(--teal), var(--magenta));
+      color: white;
+      text-align: center;
+      padding: 100px 5%;
+    }
+    .newsletter form {
+      max-width: 500px;
+      margin: 2rem auto 0;
+      display: flex;
+      gap: 1rem;
+    }
+    .newsletter input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+    }
+    .newsletter button {
+      padding: 1rem 2.5rem;
+      background: var(--gold); color: #000; border: none; border-radius: 50px; font-weight: 600; cursor: pointer;
+    }
+
+    /* Footer */
+    footer { background: var(--charcoal); color: #ccc; padding: 4rem 5% 2rem; }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 0 auto 3rem;
+    }
+    .footer-col h4 { color: white; margin-bottom: 1.5rem; }
+    .footer-col a { display: block; margin-bottom: 0.8rem; transition: color 0.3s; }
+    .footer-col a:hover { color: var(--gold); }
+    .social-icons a { font-size: 1.8rem; margin-right: 1rem; }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 4.5rem; }
+      .hero .subtitle { font-size: 1.9rem; }
+      .nav-links { display: none; }
+      section { padding: 80px 5%; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">ties<span>2</span>go</div>
+    <div class="nav-links">
+      <a href="#collections">Collections</a>
+      <a href="#best-sellers">Best Sellers</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>ties2go</h1>
+      <p class="subtitle">Ties With Personality</p>
+      <p>Handcrafted in England — where bold patterns meet impeccable quality. Because your neckwear should say something before you do.</p>
+      <div>
+        <a href="#best-sellers" class="btn btn-primary">Shop New Arrivals</a>
+        <a href="#collections" class="btn btn-secondary">Explore Collections</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="collections">
+    <h2 class="section-title">Featured Collections</h2>
+    <div class="collections-grid">
+      <a href="#" class="collection-card">
+        <img src="https://picsum.photos/seed/boldwacky/800/1000.webp" alt="Bold & Wacky">
+        <div class="collection-overlay"><h3>Bold &amp; Wacky</h3></div>
+      </a>
+      <a href="#" class="collection-card">
+        <img src="https://picsum.photos/seed/wedding/800/1000.webp" alt="Wedding & Occasion">
+        <div class="collection-overlay"><h3>Wedding &amp; Occasion</h3></div>
+      </a>
+      <a href="#" class="collection-card">
+        <img src="https://picsum.photos/seed/executive/800/1000.webp" alt="Executive Classics">
+        <div class="collection-overlay"><h3>Executive Classics</h3></div>
+      </a>
+      <a href="#" class="collection-card">
+        <img src="https://picsum.photos/seed/artties/800/1000.webp" alt="Limited Edition Art Ties">
+        <div class="collection-overlay"><h3>Limited Edition Art Ties</h3></div>
+      </a>
+      <a href="#" class="collection-card">
+        <img src="https://picsum.photos/seed/pocketsquares/800/1000.webp" alt="Pocket Squares & Accessories">
+        <div class="collection-overlay"><h3>Pocket Squares &amp; Accessories</h3></div>
+      </a>
+    </div>
+  </section>
+
+  <section id="best-sellers" class="carousel">
+    <div class="carousel-container">
+      <h2 class="section-title">Best Sellers</h2>
+      <div class="carousel-inner" id="carousel">
+        <div class="product-card">
+          <img src="https://picsum.photos/seed/tie1/600/800.webp" alt="Confetti Chaos">
+          <div class="product-info">
+            <h4>Confetti Chaos</h4>
+            <p class="tagline">Pure silk, hand-finished</p>
+            <div class="price">£79</div>
+            <button class="add-to-cart">Add to Cart</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <img src="https://picsum.photos/seed/tie2/600/800.webp" alt="Midnight Paisley">
+          <div class="product-info">
+            <h4>Midnight Paisley</h4>
+            <p class="tagline">Limited edition of 100</p>
+            <div class="price">£89</div>
+            <button class="add-to-cart">Add to Cart</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <img src="https://picsum.photos/seed/tie3/600/800.webp" alt="Electric Zebra">
+          <div class="product-info">
+            <h4>Electric Zebra</h4>
+            <p class="tagline">Bold never looked so sharp</p>
+            <div class="price">£75</div>
+            <button class="add-to-cart">Add to Cart</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <img src="https://picsum.photos/seed/tie4/600/800.webp" alt="Golden Hour">
+          <div class="product-info">
+            <h4>Golden Hour</h4>
+            <p class="tagline">Pure silk jacquard</p>
+            <div class="price">£95</div>
+            <button class="add-to-cart">Add to Cart</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <img src="https://picsum.photos/seed/tie5/600/800.webp" alt="Neon Flamingo">
+          <div class="product-info">
+            <h4>Neon Flamingo</h4>
+            <p class="tagline">Summer party essential</p>
+            <div class="price">£69</div>
+            <button class="add-to-cart">Add to Cart</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <img src="https://picsum.photos/seed/tie6/600/800.webp" alt="Royal Velvet">
+          <div class="product-info">
+            <h4>Royal Velvet</h4>
+            <p class="tagline">Texture that demands attention</p>
+            <div class="price">£110</div>
+            <button class="add-to-cart">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Why ties2go</h2>
+    <div class="features">
+      <div class="feature"><i class="fas fa-gem"></i><h3>Premium Fabrics</h3><p>100% silk, finest Italian & British weaves.</p></div>
+      <div class="feature"><i class="fas fa-hands-helping"></i><h3>Hand Finished</h3><p>Every tie is hand-cut and stitched in England.</p></div>
+      <div class="feature"><i class="fas fa-palette"></i><h3>Unapologetically Bold</h3><p>Designs that spark joy and conversation.</p></div>
+      <div class="feature"><i class="fas fa-truck"></i><h3>Fast UK Shipping</h3><p>Free next-day delivery on orders over £100.</p></div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <h2 class="section-title">About ties2go</h2>
+    <p>Founded by a designer who got tired of boring boardrooms, ties2go is on a mission to bring joy, colour and personality back to menswear — without ever compromising on quality.</p>
+    <p>Every pattern starts as a hand-drawn illustration. Every tie is crafted with the same obsession as Savile Row tailoring. The result? Neckwear that makes you smile when you knot it.</p>
+  </section>
+
+  <section>
+    <h2 class="section-title">What People Say</h2>
+    <div class="testimonials">
+      <div class="testimonial"><p>“Best tie I’ve ever owned. Got compliments all night at my wedding!”</p><cite>— James, London</cite></div>
+      <div class="testimonial"><p>“I wear the Electric Zebra to every pitch. It’s basically my lucky tie now.”</p><cite>— Michael, Manchester</cite></div>
+      <div class="testimonial"><p>“Finally — a brand that gets it. Quality AND personality.”</p><cite>— Oliver, Bristol</cite></div>
+    </div>
+  </section>
+
+  <section class="newsletter">
+    <h2 class="section-title">Join the Tie Society</h2>
+    <p>Be first for new drops, secret sales and exclusive wacky patterns.</p>
+    <form>
+      <input type="email" placeholder="Your email address" required>
+      <button type="submit">Sign Me Up</button>
+    </form>
+  </section>
+
+  <footer id="contact">
+    <div class="footer-grid">
+      <div class="footer-col"><h4>ties2go</h4><p>Ties with personality. Handmade in England.</p></div>
+      <div class="footer-col"><h4>Shop</h4><a href="#">New Arrivals</a><a href="#">Best Sellers</a><a href="#">All Ties</a><a href="#">Accessories</a></div>
+      <div class="footer-col"><h4>About</h4><a href="#">Our Story</a><a href="#">Craftsmanship</a><a href="#">Press</a></div>
+      <div class="footer-col"><h4>Help</h4><a href="#">Shipping & Returns</a><a href="#">Size Guide</a><a href="#">Contact</a></div>
+      <div class="footer-col"><h4>Follow Us</h4>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-tiktok"></i></a>
+          <a href="#"><i class="fab fa-facebook"></i></a>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center; padding-top:2rem; opacity:0.7;">© 2025 ties2go. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Drag-to-scroll carousel
+    const carousel = document.querySelector('.carousel-inner');
+    let isDown = false, startX, scrollLeft;
+    carousel.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - carousel.offsetLeft; scrollLeft = carousel.parentElement.scrollLeft; });
+    carousel.addEventListener('mouseleave', () => isDown = false);
+    carousel.addEventListener('mouseup', () => isDown = false);
+    carousel.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - carousel.offsetLeft;
+      const walk = (x - startX) * 2;
+      carousel.parentElement.scrollLeft = scrollLeft - walk;
+    });
+  </script>
+</body>
+</html>
